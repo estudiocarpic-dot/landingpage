@@ -1,0 +1,830 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Código Venta Invisible | Ventas Diarias Sin Perseguir Clientes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --black: #080808;
+    --deep: #0d0d0d;
+    --card: #111111;
+    --border: #1e1e1e;
+    --gold: #c9a84c;
+    --gold-light: #e8c96d;
+    --gold-dim: rgba(201,168,76,0.12);
+    --red: #d94040;
+    --white: #f5f0e8;
+    --gray: #6b6b6b;
+    --light-gray: #9a9a9a;
+    --green: #4caf71;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { background: var(--black); color: var(--white); font-family: 'DM Sans', sans-serif; font-weight: 400; line-height: 1.7; overflow-x: hidden; }
+  body::before { content: ''; position: fixed; inset: 0; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E"); pointer-events: none; z-index: 999; opacity: 0.4; }
+  h1, h2, h3 { font-family: 'Playfair Display', Georgia, serif; line-height: 1.15; }
+  .container { max-width: 860px; margin: 0 auto; padding: 0 24px; }
+  .gold { color: var(--gold); }
+  .italic { font-style: italic; }
+
+  .topbar { background: var(--gold); color: var(--black); text-align: center; padding: 10px 24px; font-weight: 700; font-size: 0.82rem; letter-spacing: 0.06em; text-transform: uppercase; }
+
+  .hero { padding: 100px 0 80px; position: relative; text-align: center; overflow: hidden; }
+  .hero::before { content: ''; position: absolute; top: -200px; left: 50%; transform: translateX(-50%); width: 700px; height: 700px; background: radial-gradient(circle, rgba(201,168,76,0.08) 0%, transparent 70%); pointer-events: none; }
+  .hero-label { display: inline-block; border: 1px solid var(--gold); color: var(--gold); font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase; padding: 6px 20px; border-radius: 2px; margin-bottom: 36px; font-family: 'DM Mono', monospace; }
+  .hero h1 { font-size: clamp(2.6rem, 6vw, 4.6rem); font-weight: 900; line-height: 1.08; max-width: 780px; margin: 0 auto 28px; }
+  .hero h1 em { font-style: italic; color: var(--gold); }
+  .hero-sub { font-size: clamp(1.05rem, 2.2vw, 1.3rem); color: var(--light-gray); max-width: 560px; margin: 0 auto 52px; line-height: 1.65; font-weight: 300; }
+  .hero-sub strong { color: var(--white); font-weight: 600; }
+
+  .btn-primary { display: inline-block; background: var(--gold); color: var(--black); font-weight: 700; font-size: 1rem; letter-spacing: 0.04em; text-transform: uppercase; padding: 20px 52px; border: none; cursor: pointer; text-decoration: none; transition: background 0.2s, transform 0.2s, box-shadow 0.2s; clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%); }
+  .btn-primary:hover { background: var(--gold-light); transform: translateY(-2px); box-shadow: 0 12px 40px rgba(201,168,76,0.35); }
+  .btn-sub { display: block; font-size: 0.75rem; color: var(--gray); margin-top: 14px; letter-spacing: 0.04em; }
+
+  .divider { border: none; border-top: 1px solid var(--border); margin: 0; }
+  .section { padding: 90px 0; }
+  .section-tag { font-family: 'DM Mono', monospace; font-size: 0.68rem; letter-spacing: 0.22em; text-transform: uppercase; color: var(--gold); margin-bottom: 18px; }
+  .section h2 { font-size: clamp(2rem, 4vw, 3rem); margin-bottom: 28px; }
+
+  .pain-list { list-style: none; margin-top: 40px; }
+  .pain-list li { display: flex; gap: 20px; padding: 22px 0; border-bottom: 1px solid var(--border); align-items: flex-start; font-size: 1.05rem; line-height: 1.6; color: #c0b9b0; }
+  .pain-list li:last-child { border-bottom: none; }
+  .pain-icon { color: var(--red); font-size: 1.1rem; margin-top: 3px; flex-shrink: 0; }
+
+  .belief-section { background: var(--deep); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+  .belief-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0; }
+  @media (max-width: 640px) { .belief-grid { grid-template-columns: 1fr; } }
+  .belief-col { padding: 48px 40px; }
+  .belief-col:first-child { border-right: 1px solid var(--border); }
+  @media (max-width: 640px) { .belief-col:first-child { border-right: none; border-bottom: 1px solid var(--border); } .belief-col { padding: 36px 24px; } }
+  .belief-label { font-size: 0.68rem; letter-spacing: 0.2em; text-transform: uppercase; font-family: 'DM Mono', monospace; margin-bottom: 20px; padding: 4px 10px; display: inline-block; border-radius: 2px; }
+  .belief-label.lie { background: rgba(217,64,64,0.15); color: var(--red); }
+  .belief-label.truth { background: rgba(201,168,76,0.15); color: var(--gold); }
+  .belief-col p { font-size: 1rem; color: #b5aea6; line-height: 1.7; }
+  .belief-col p strong { color: var(--white); }
+
+  /* CREATOR STORY */
+  .creator-section { background: var(--black); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+  .creator-inner { display: grid; grid-template-columns: auto 1fr; gap: 56px; align-items: start; }
+  @media (max-width: 640px) { .creator-inner { grid-template-columns: 1fr; gap: 32px; } }
+  .creator-avatar-wrap { display: flex; flex-direction: column; align-items: center; gap: 12px; }
+  .creator-avatar { width: 96px; height: 96px; border-radius: 50%; background: #1a1610; border: 2px solid var(--gold); display: flex; align-items: center; justify-content: center; font-family: 'Playfair Display', serif; font-size: 2.2rem; font-weight: 900; color: var(--gold); flex-shrink: 0; }
+  .creator-badge { font-family: 'DM Mono', monospace; font-size: 0.62rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gray); text-align: center; line-height: 1.5; }
+  .creator-body h3 { font-size: clamp(1.5rem, 3vw, 2rem); margin-bottom: 20px; line-height: 1.2; }
+  .creator-body p { font-size: 0.98rem; color: #b5aea6; line-height: 1.78; margin-bottom: 16px; }
+  .creator-body p strong { color: var(--white); }
+  .creator-body p:last-child { margin-bottom: 0; }
+  .creator-pull { border-left: 2px solid var(--gold); padding-left: 20px; margin: 24px 0; font-size: 1.05rem; color: var(--white); font-family: 'Playfair Display', serif; font-style: italic; line-height: 1.6; }
+
+  .mechanism-box { border: 1px solid var(--gold); background: linear-gradient(135deg, rgba(201,168,76,0.04) 0%, transparent 60%); padding: 56px 48px; position: relative; margin-top: 52px; }
+  @media (max-width: 640px) { .mechanism-box { padding: 36px 24px; } }
+  .mechanism-box::before { content: 'CVI'; position: absolute; top: -18px; left: 48px; background: var(--gold); color: var(--black); font-family: 'DM Mono', monospace; font-size: 0.7rem; font-weight: 500; letter-spacing: 0.15em; padding: 4px 14px; }
+  .pillars { display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; margin-top: 44px; }
+  @media (max-width: 640px) { .pillars { grid-template-columns: 1fr; gap: 24px; } }
+  .pillar { text-align: center; }
+  .pillar-num { font-family: 'Playfair Display', serif; font-size: 3rem; font-weight: 900; color: var(--gold); opacity: 0.3; line-height: 1; margin-bottom: 10px; }
+  .pillar h4 { font-family: 'DM Sans', sans-serif; font-weight: 600; font-size: 0.95rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--white); margin-bottom: 10px; }
+  .pillar p { font-size: 0.88rem; color: var(--light-gray); line-height: 1.6; }
+
+  .not-for-all { margin-top: 36px; border: 1px solid #1e1e1e; padding: 24px 28px; background: #0d0d0d; display: flex; gap: 16px; align-items: flex-start; }
+  .not-for-all p { font-size: 0.88rem; color: var(--light-gray); line-height: 1.65; }
+  .not-for-all p strong { color: var(--white); }
+
+  .benefit-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; margin-top: 48px; background: var(--border); border: 1px solid var(--border); }
+  @media (max-width: 640px) { .benefit-grid { grid-template-columns: 1fr; } }
+  .benefit-item { background: var(--card); padding: 32px 28px; transition: background 0.2s; }
+  .benefit-item:hover { background: #151515; }
+  .benefit-num { font-family: 'DM Mono', monospace; font-size: 0.68rem; color: var(--gold); letter-spacing: 0.12em; margin-bottom: 12px; }
+  .benefit-item h4 { font-family: 'DM Sans', sans-serif; font-weight: 600; font-size: 1rem; color: var(--white); margin-bottom: 10px; }
+  .benefit-item p { font-size: 0.9rem; color: var(--light-gray); line-height: 1.6; }
+
+  .module-list { margin-top: 48px; }
+  .module { display: grid; grid-template-columns: 48px 1fr; gap: 24px; padding: 32px 0; border-bottom: 1px solid var(--border); align-items: start; }
+  .module:last-child { border-bottom: none; }
+  .module-n { font-family: 'Playfair Display', serif; font-size: 2.2rem; font-weight: 900; color: var(--gold); opacity: 0.4; line-height: 1; padding-top: 4px; }
+  .module h4 { font-family: 'DM Sans', sans-serif; font-weight: 600; font-size: 1.05rem; color: var(--white); margin-bottom: 8px; }
+  .module p { font-size: 0.9rem; color: var(--light-gray); line-height: 1.65; }
+  .module-tag { display: inline-block; background: var(--gold-dim); color: var(--gold); font-size: 0.65rem; font-family: 'DM Mono', monospace; letter-spacing: 0.12em; text-transform: uppercase; padding: 3px 10px; border-radius: 2px; margin-bottom: 10px; }
+
+  .ba-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; margin-top: 48px; background: var(--border); }
+  @media (max-width: 640px) { .ba-grid { grid-template-columns: 1fr; } }
+  .ba-col { padding: 40px 36px; }
+  @media (max-width: 640px) { .ba-col { padding: 32px 24px; } }
+  .ba-before { background: #100a0a; }
+  .ba-after { background: #0a0f0a; }
+  .ba-label { font-family: 'DM Mono', monospace; font-size: 0.68rem; letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 24px; display: block; }
+  .ba-before .ba-label { color: var(--red); }
+  .ba-after .ba-label { color: #4caf71; }
+  .ba-col ul { list-style: none; }
+  .ba-col ul li { padding: 10px 0; font-size: 0.95rem; border-bottom: 1px solid rgba(255,255,255,0.05); display: flex; gap: 12px; align-items: flex-start; color: #b0a9a1; }
+  .ba-col ul li:last-child { border-bottom: none; }
+  .ba-before ul li .icon { color: var(--red); }
+  .ba-after ul li .icon { color: #4caf71; }
+
+  /* TESTIMONIALS */
+  .testimonials-section { background: var(--deep); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+  .testi-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; margin-top: 48px; background: var(--border); }
+  @media (max-width: 768px) { .testi-grid { grid-template-columns: 1fr; } }
+  .testi-card { background: var(--card); padding: 32px 28px; }
+  .testi-result { display: inline-block; background: rgba(76,175,113,0.12); border: 1px solid rgba(76,175,113,0.3); color: var(--green); font-family: 'DM Mono', monospace; font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase; padding: 4px 12px; border-radius: 2px; margin-bottom: 14px; }
+  .stars { color: var(--gold); font-size: 0.85rem; letter-spacing: 3px; margin-bottom: 14px; }
+  .testi-text { font-size: 0.92rem; color: #c0b9b0; line-height: 1.7; font-style: italic; margin-bottom: 16px; }
+  .testi-text strong { color: var(--white); font-style: normal; }
+  .testi-context { font-size: 0.76rem; color: var(--gray); margin-bottom: 18px; font-family: 'DM Mono', monospace; letter-spacing: 0.04em; padding: 8px 12px; background: rgba(255,255,255,0.03); border-left: 2px solid #2a2a2a; line-height: 1.5; }
+  .testi-author { display: flex; align-items: center; gap: 12px; }
+  .testi-avatar { width: 38px; height: 38px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.85rem; color: var(--black); flex-shrink: 0; }
+  .testi-name { font-weight: 600; font-size: 0.88rem; color: var(--white); }
+  .testi-role { font-size: 0.75rem; color: var(--gray); margin-top: 2px; }
+
+  .share-quote { margin-top: 52px; padding: 36px 40px; border: 1px solid var(--border); background: var(--deep); text-align: center; position: relative; }
+  .share-quote::before { content: '\00AB'; position: absolute; top: -14px; left: 50%; transform: translateX(-50%); background: var(--deep); padding: 0 12px; font-family: 'Playfair Display', serif; font-size: 2rem; color: var(--gold); line-height: 1; }
+  .share-quote p { font-family: 'Playfair Display', serif; font-style: italic; font-size: clamp(1rem, 2vw, 1.18rem); color: var(--white); line-height: 1.6; max-width: 620px; margin: 0 auto 14px; }
+  .share-quote cite { font-size: 0.76rem; color: var(--gray); font-style: normal; font-family: 'DM Mono', monospace; letter-spacing: 0.1em; }
+
+  .bonus-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-top: 48px; }
+  @media (max-width: 640px) { .bonus-grid { grid-template-columns: 1fr; } }
+  .bonus-card { border: 1px solid var(--border); padding: 28px 24px; position: relative; background: var(--card); }
+  .bonus-badge { position: absolute; top: -12px; left: 20px; background: var(--gold); color: var(--black); font-family: 'DM Mono', monospace; font-size: 0.62rem; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; padding: 3px 12px; }
+  .bonus-value { font-family: 'DM Mono', monospace; font-size: 0.72rem; color: var(--gray); letter-spacing: 0.1em; margin-bottom: 10px; text-decoration: line-through; }
+  .bonus-card h4 { font-family: 'DM Sans', sans-serif; font-weight: 600; font-size: 0.95rem; color: var(--white); margin-bottom: 8px; }
+  .bonus-card p { font-size: 0.85rem; color: var(--light-gray); line-height: 1.6; }
+
+  .guarantee-box { border: 1px solid var(--border); padding: 52px 48px; display: grid; grid-template-columns: auto 1fr; gap: 40px; align-items: start; margin-top: 48px; background: var(--card); }
+  @media (max-width: 640px) { .guarantee-box { grid-template-columns: 1fr; gap: 24px; padding: 36px 24px; } }
+  .guarantee-shield { font-size: 4.5rem; line-height: 1; }
+  .guarantee-box h3 { font-size: 1.6rem; margin-bottom: 14px; font-weight: 700; }
+  .guarantee-box p { font-size: 0.95rem; color: var(--light-gray); line-height: 1.7; }
+
+  /* PRICE JUSTIFICATION */
+  .price-justify { background: #0a0800; border: 1px solid #2a1e00; padding: 48px 44px; }
+  @media (max-width: 640px) { .price-justify { padding: 36px 24px; } }
+  .pj-tag { font-family: 'DM Mono', monospace; font-size: 0.68rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); margin-bottom: 18px; display: block; }
+  .price-justify h3 { font-size: clamp(1.3rem, 3vw, 1.9rem); margin-bottom: 20px; line-height: 1.3; }
+  .price-justify p { font-size: 0.95rem; color: var(--light-gray); line-height: 1.75; margin-bottom: 14px; }
+  .price-justify p strong { color: var(--white); }
+  .price-justify p:last-child { margin-bottom: 0; }
+  .pj-breakdown { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; margin: 28px 0; background: var(--border); }
+  @media (max-width: 560px) { .pj-breakdown { grid-template-columns: 1fr; } }
+  .pj-item { background: #100e08; padding: 20px 22px; }
+  .pj-label { font-family: 'DM Mono', monospace; font-size: 0.7rem; color: var(--gray); letter-spacing: 0.1em; margin-bottom: 6px; }
+  .pj-val { font-weight: 600; font-size: 1rem; color: var(--white); }
+  .pj-val.green { color: var(--green); }
+  .pj-val.strike { text-decoration: line-through; color: var(--gray); font-size: 0.9rem; }
+
+  .urgency-section { background: #0d0800; border-top: 1px solid #2a1e00; border-bottom: 1px solid #2a1e00; }
+  .price-block { text-align: center; padding: 20px 0; }
+  .price-old { font-size: 1.1rem; color: var(--gray); text-decoration: line-through; font-family: 'DM Mono', monospace; margin-bottom: 8px; }
+  .price-new { font-family: 'Playfair Display', serif; font-size: clamp(3.5rem, 8vw, 5.5rem); font-weight: 900; color: var(--gold); line-height: 1; margin-bottom: 10px; }
+  .price-note { font-size: 0.82rem; color: var(--gray); letter-spacing: 0.06em; }
+  .countdown-label { font-family: 'DM Mono', monospace; font-size: 0.68rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); margin-bottom: 16px; }
+  .countdown { display: flex; gap: 16px; justify-content: center; margin: 24px 0; }
+  .count-unit { text-align: center; }
+  .count-num { font-family: 'DM Mono', monospace; font-size: 2.2rem; font-weight: 500; color: var(--white); background: var(--card); border: 1px solid var(--border); padding: 10px 18px; min-width: 70px; display: block; }
+  .count-label { font-size: 0.65rem; color: var(--gray); letter-spacing: 0.12em; text-transform: uppercase; margin-top: 6px; font-family: 'DM Mono', monospace; }
+  .slots-bar { max-width: 420px; margin: 28px auto 0; }
+  .slots-track { height: 6px; background: var(--border); border-radius: 3px; overflow: hidden; margin-top: 10px; }
+  .slots-fill { height: 100%; width: 73%; background: linear-gradient(90deg, var(--gold), var(--gold-light)); border-radius: 3px; }
+  .slots-text { font-family: 'DM Mono', monospace; font-size: 0.72rem; color: var(--light-gray); letter-spacing: 0.08em; display: flex; justify-content: space-between; margin-top: 8px; }
+
+  .final-cta { padding: 100px 0; text-align: center; position: relative; overflow: hidden; }
+  .final-cta::before { content: ''; position: absolute; bottom: -100px; left: 50%; transform: translateX(-50%); width: 600px; height: 400px; background: radial-gradient(ellipse, rgba(201,168,76,0.07) 0%, transparent 70%); pointer-events: none; }
+  .final-cta h2 { font-size: clamp(2rem, 4.5vw, 3.2rem); max-width: 680px; margin: 0 auto 24px; }
+  .final-cta p { font-size: 1.05rem; color: var(--light-gray); max-width: 460px; margin: 0 auto 48px; }
+
+  footer { border-top: 1px solid var(--border); padding: 32px 24px; text-align: center; font-size: 0.78rem; color: var(--gray); line-height: 1.8; }
+  footer a { color: var(--gray); text-decoration: underline; }
+  .sep { display: flex; align-items: center; gap: 20px; margin: 56px 0 0; }
+  .sep-line { flex: 1; height: 1px; background: var(--border); }
+  .sep-icon { color: var(--gold); font-size: 0.9rem; letter-spacing: 6px; }
+  .includes-summary { border: 1px solid var(--gold); background: var(--gold-dim); padding: 32px 36px; margin-top: 48px; }
+  .includes-summary h4 { font-family: 'DM Sans', sans-serif; font-size: 0.78rem; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--gold); margin-bottom: 20px; }
+  .includes-list { list-style: none; display: grid; grid-template-columns: 1fr 1fr; gap: 10px 32px; }
+  @media (max-width: 560px) { .includes-list { grid-template-columns: 1fr; } }
+  .includes-list li { font-size: 0.9rem; color: var(--white); display: flex; gap: 10px; align-items: flex-start; }
+  .includes-list li::before { content: '\2756'; color: var(--gold); font-size: 0.6rem; margin-top: 5px; flex-shrink: 0; }
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(28px); } to { opacity: 1; transform: translateY(0); } }
+  .fade-up { animation: fadeUp 0.8s ease both; }
+  .delay-1 { animation-delay: 0.15s; }
+  .delay-2 { animation-delay: 0.3s; }
+  .delay-3 { animation-delay: 0.45s; }
+
+  /* ── MODAL DE CAPTURA ── */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.82);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    backdrop-filter: blur(4px);
+  }
+  .modal-overlay.active { display: flex; }
+
+  .modal-box {
+    background: #111111;
+    border: 1px solid rgba(201,168,76,0.35);
+    max-width: 480px;
+    width: 100%;
+    padding: 52px 44px;
+    position: relative;
+    animation: modalIn 0.3s ease;
+  }
+  @keyframes modalIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @media (max-width: 560px) { .modal-box { padding: 36px 24px; } }
+
+  .modal-box::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  }
+
+  .modal-close {
+    position: absolute;
+    top: 16px; right: 20px;
+    background: none;
+    border: none;
+    color: var(--gray);
+    font-size: 1.4rem;
+    cursor: pointer;
+    line-height: 1;
+    padding: 4px;
+    transition: color 0.2s;
+  }
+  .modal-close:hover { color: var(--white); }
+
+  .modal-tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.68rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 14px;
+    display: block;
+  }
+
+  .modal-box h3 {
+    font-size: 1.5rem;
+    margin-bottom: 8px;
+    line-height: 1.2;
+  }
+
+  .modal-box p.modal-sub {
+    font-size: 0.88rem;
+    color: var(--light-gray);
+    margin-bottom: 28px;
+    line-height: 1.6;
+  }
+
+  .modal-field {
+    margin-bottom: 16px;
+  }
+
+  .modal-field label {
+    display: block;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.68rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--gray);
+    margin-bottom: 8px;
+  }
+
+  .modal-field input {
+    width: 100%;
+    background: #0d0d0d;
+    border: 1px solid #2a2a2a;
+    color: var(--white);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.95rem;
+    padding: 14px 16px;
+    outline: none;
+    transition: border-color 0.2s;
+    border-radius: 0;
+    -webkit-appearance: none;
+  }
+
+  .modal-field input:focus {
+    border-color: var(--gold);
+  }
+
+  .modal-field input::placeholder {
+    color: #3a3a3a;
+  }
+
+  .modal-submit {
+    width: 100%;
+    margin-top: 24px;
+    background: var(--gold);
+    color: var(--black);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 700;
+    font-size: 0.95rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 18px 24px;
+    border: none;
+    cursor: pointer;
+    clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%);
+    transition: background 0.2s, transform 0.2s;
+  }
+  .modal-submit:hover { background: var(--gold-light); transform: translateY(-1px); }
+  .modal-submit:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+
+  .modal-note {
+    margin-top: 14px;
+    font-size: 0.72rem;
+    color: var(--gray);
+    text-align: center;
+    line-height: 1.5;
+  }
+
+  .modal-success {
+    display: none;
+    text-align: center;
+    padding: 12px 0;
+  }
+  .modal-success .success-icon { font-size: 2.5rem; margin-bottom: 12px; }
+  .modal-success h4 { font-size: 1.3rem; margin-bottom: 8px; }
+  .modal-success p { font-size: 0.88rem; color: var(--light-gray); }
+
+  .modal-error {
+    display: none;
+    background: rgba(217,64,64,0.12);
+    border: 1px solid rgba(217,64,64,0.3);
+    color: #e07a72;
+    font-size: 0.82rem;
+    padding: 10px 14px;
+    margin-top: 12px;
+    text-align: center;
+  }
+</style>
+</head>
+<body>
+
+<!-- TOPBAR — urgencia concreta sin exagerar -->
+<div class="topbar">Precio de lanzamiento: $47.000 pesos &nbsp;·&nbsp; Sube a $97.000 al completar los cupos actuales</div>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="container">
+    <div class="hero-label fade-up">Nuevo Mecanismo de Ventas</div>
+    <h1 class="fade-up delay-1">
+      Deja de <em>perseguir clientes</em><br>
+      y que ellos empiecen<br>
+      a buscarte <em>a ti</em>
+    </h1>
+    <p class="hero-sub fade-up delay-2">
+      La estructura exacta que hace que la gente compre sin que tengas que convencer, insistir ni bajar el precio. <strong>Ventas consistentes. Sin teatro. Sin perseguir.</strong>
+    </p>
+    <a href="#cta" class="btn-primary fade-up delay-3">Quiero el programa — $47.000 pesos</a>
+    <span class="btn-sub">Acceso inmediato &nbsp;·&nbsp; Garantía 5 días &nbsp;·&nbsp; Sin cuotas</span>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- PAIN -->
+<section class="section">
+  <div class="container">
+    <p class="section-tag">El problema real</p>
+    <h2>Si estás leyendo esto,<br>ya sabes <span class="gold">cómo se siente.</span></h2>
+    <p style="color: var(--light-gray); max-width: 580px; margin-top: 16px; font-size: 1.02rem;">No es falta de esfuerzo. No es que tu producto sea malo. Es que nadie te enseñó la estructura correcta.</p>
+    <ul class="pain-list">
+      <li><span class="pain-icon">✕</span><div><strong>Publicás contenido todos los días y el silencio responde.</strong> Ves likes, a veces comentarios. Ventas: pocas, irregulares, impredecibles. La frustración se convierte en duda, y la duda te paraliza.</div></li>
+      <li><span class="pain-icon">✕</span><div><strong>Cada vez que alguien dice "lo pienso" sentís que fallaste.</strong> No sabés si fue el precio, el mensaje, el momento. Esa incertidumbre pesa más que el dinero que no entró.</div></li>
+      <li><span class="pain-icon">✕</span><div><strong>Probás técnicas, copiás estrategias, seguís cursos.</strong> Algo funciona una vez. Pero no hay sistema que se repita. Solo resultados que no podés predecir ni escalar.</div></li>
+      <li><span class="pain-icon">✕</span><div><strong>Sentís que tenés que "venderte" y eso te avergüenza.</strong> Como si fueras a molestar. Esa creencia está saboteando cada conversación de compra aunque no te des cuenta.</div></li>
+      <li><span class="pain-icon">✕</span><div><strong>Ves personas con menos talento generando más que vos.</strong> La diferencia no es el producto. Es la estructura que usan para comunicarse. Eso es exactamente lo que vas a aprender acá.</div></li>
+    </ul>
+  </div>
+</section>
+
+<!-- BELIEF BREAK -->
+<section class="belief-section section" style="padding: 0;">
+  <div class="container" style="padding-top: 60px; padding-bottom: 20px;">
+    <p class="section-tag" style="text-align:center; margin-bottom: 40px;">Lo que te dijeron vs. la realidad</p>
+  </div>
+  <div class="belief-grid">
+    <div class="belief-col">
+      <span class="belief-label lie">La mentira</span>
+      <p>Te dijeron que necesitás más seguidores. Más contenido. Mejores anuncios. Un funnel más complejo. <strong>Que si trabajás más duro, las ventas llegarán.</strong><br><br>Trabajaste más. Y seguís en el mismo lugar.</p>
+    </div>
+    <div class="belief-col">
+      <span class="belief-label truth">La realidad</span>
+      <p>Las ventas no llegan por volumen. Llegan por <strong>percepción</strong>. La gente no compra el mejor producto — compra al que mejor entiende su situación y comunica desde autoridad genuina.<br><br>Cuando dominás eso, el esfuerzo deja de ser la variable.</p>
+    </div>
+  </div>
+  <div style="height:60px;"></div>
+</section>
+
+<!-- MECHANISM -->
+<section class="section">
+  <div class="container">
+    <p class="section-tag">El nuevo mecanismo</p>
+    <h2>Por qué algunos venden sin esfuerzo<br>y otros no venden <span class="gold">aunque lo intenten todo</span></h2>
+    <p style="color: var(--light-gray); max-width: 600px; margin-top: 16px; font-size: 1.02rem;">Existe una estructura invisible en toda comunicación que genera ventas. No tiene que ver con persuasión agresiva ni con técnicas de cierre. Tiene que ver con cómo la mente del comprador procesa confianza, urgencia y valor.</p>
+
+    <div class="mechanism-box">
+      <h3 style="font-size: 1.8rem; margin-bottom: 16px;">Código Venta Invisible</h3>
+      <p style="color: var(--light-gray); max-width: 580px; font-size: 0.98rem; line-height: 1.7;">Un sistema de tres pilares que trabaja en la percepción <em>antes</em> de que el cliente sepa que está evaluando comprarte. No manipulación — <strong style="color: var(--white);">arquitectura de confianza</strong>.</p>
+      <div class="pillars">
+        <div class="pillar"><div class="pillar-num">01</div><h4>Percepción</h4><p>Cómo te ven antes de que hablen con vos. El posicionamiento que hace que lleguen pre-convencidos.</p></div>
+        <div class="pillar"><div class="pillar-num">02</div><h4>Identidad</h4><p>La certeza interna que proyectás al comunicar. Los que dudan de sí mismos ahuyentan clientes sin notarlo.</p></div>
+        <div class="pillar"><div class="pillar-num">03</div><h4>Comunicación</h4><p>El lenguaje exacto que activa deseo, urgencia y decisión. Estructura reproducible, no improvisación.</p></div>
+      </div>
+    </div>
+
+    <!-- MICRO CREDIBILIDAD -->
+    <div class="not-for-all">
+      <p>&#9888;&nbsp;&nbsp;<strong>Esto no es para todo el mundo.</strong> Requiere que estés dispuesto a cambiar cómo te comunicás, no solo a consumir contenido. Si buscás un atajo que funcione sin hacer nada diferente, esto no es para vos. Si estás listo para aplicar una estructura nueva, sí.</p>
+    </div>
+  </div>
+</section>
+
+<!-- CREATOR STORY — sección nueva -->
+<section class="creator-section section">
+  <div class="container">
+    <p class="section-tag">Por qué existe este programa</p>
+    <div class="creator-inner">
+      <div class="creator-avatar-wrap">
+        <div class="creator-avatar">M</div>
+        <div class="creator-badge">Creador del<br>Código CVI</div>
+      </div>
+      <div class="creator-body">
+        <h3>Lo armé porque yo también estuve atascado en ese ciclo.</h3>
+        <p>Durante casi dos años tuve un servicio que genuinamente funcionaba. Mis clientes obtenían resultados. Pero vender era una agonía. Publicaba, mandaba mensajes, hacía seguimiento. A veces vendía. A veces no. Sin patrón claro.</p>
+        <p>Empecé a estudiar qué hacían diferente las personas que vendían con consistencia. No era que tenían más seguidores, ni mejor producto, ni más talento. <strong>Era que comunicaban desde un lugar diferente.</strong> Su presencia generaba una percepción que yo no estaba construyendo conscientemente.</p>
+        <div class="creator-pull">"La venta no empieza en la conversación. Empieza en cómo alguien te percibe antes de hablar con vos."</div>
+        <p>Tardé meses en entender esa dinámica, probarla y refinarla. Cuando la tuve clara, mis conversaciones cambiaron por completo. El Código Venta Invisible es exactamente eso — condensado en un sistema que podés aplicar desde el primer día, sin el proceso de prueba y error que me costó a mí.</p>
+        <p style="color: var(--gray); font-size: 0.88rem;">Este programa no existe para hacerme rico con $47.000. Existe porque hay personas con productos genuinamente buenos que están trabadas exactamente donde estuve yo.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BENEFITS -->
+<section class="section" style="padding-top: 0;">
+  <div class="container">
+    <p class="section-tag">Qué obtenés exactamente</p>
+    <h2>6 resultados concretos que<br>vas a experimentar <span class="gold">aplicando el sistema</span></h2>
+    <div class="benefit-grid">
+      <div class="benefit-item"><div class="benefit-num">— 01</div><h4>Claridad de posicionamiento</h4><p>Sabés exactamente qué decir, a quién y cuándo. Se acabó la parálisis frente a un mensaje en blanco o un cliente potencial.</p></div>
+      <div class="benefit-item"><div class="benefit-num">— 02</div><h4>Autoridad percibida sin falsedad</h4><p>Las personas empiezan a verte diferente — antes de que hagas una sola venta — porque tu comunicación transmite solidez real.</p></div>
+      <div class="benefit-item"><div class="benefit-num">— 03</div><h4>Mensajes que mueven a la acción</h4><p>Sabés cómo escribir un post, un DM o una propuesta que genera respuesta. No opiniones — conversaciones de compra.</p></div>
+      <div class="benefit-item"><div class="benefit-num">— 04</div><h4>Cero necesidad de perseguir</h4><p>Tu presencia genera atracción. Los clientes llegan porque tu estructura de comunicación los lleva a buscarte activamente.</p></div>
+      <div class="benefit-item"><div class="benefit-num">— 05</div><h4>Consistencia de ingresos</h4><p>Un sistema es replicable. Cuando entendés el Código, la venta no depende del humor del día — depende de la estructura.</p></div>
+      <div class="benefit-item"><div class="benefit-num">— 06</div><h4>Seguridad real al vender</h4><p>Dejás de sentir que "molestás" para sentir que ofrecés algo genuinamente valioso. Ese cambio lo percibe el cliente antes que vos.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- MODULES -->
+<section class="section" style="background: var(--deep); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);">
+  <div class="container">
+    <p class="section-tag">Contenido del programa</p>
+    <h2>Lo que vas a aprender,<br><span class="gold italic">módulo por módulo</span></h2>
+    <div class="module-list">
+      <div class="module"><div class="module-n">1</div><div><span class="module-tag">Fundamentos</span><h4>La Psicología Detrás de Toda Compra</h4><p>Entenderás exactamente qué hace que alguien tome la decisión de comprar — y por qué la mayoría del marketing convencional trabaja en contra de ese proceso. Acá romperás creencias que te están costando dinero cada día.</p></div></div>
+      <div class="module"><div class="module-n">2</div><div><span class="module-tag">Identidad</span><h4>La Identidad del Vendedor de Alta Conversión</h4><p>Construirás la mentalidad y la certeza que proyectan los que venden con naturalidad. Sin ella, ninguna técnica funciona. Con ella, hasta los mensajes más simples convierten.</p></div></div>
+      <div class="module"><div class="module-n">3</div><div><span class="module-tag">Posicionamiento</span><h4>Cómo Ser la Opción Obvia en Tu Mercado</h4><p>El posicionamiento no es un slogan. Es la percepción completa que alguien tiene de vos antes de hablar con vos. Aprenderás a construirlo intencionalmente para que los clientes lleguen ya orientados a comprar.</p></div></div>
+      <div class="module"><div class="module-n">4</div><div><span class="module-tag">Comunicación</span><h4>El Lenguaje que Genera Ventas</h4><p>Estructura exacta para posts, mensajes directos, historias y conversaciones. No frases mágicas — una lógica que podés aplicar a cualquier contexto y que activa deseo, urgencia y decisión.</p></div></div>
+      <div class="module"><div class="module-n">5</div><div><span class="module-tag">Sistema</span><h4>El Sistema de Ventas Diarias</h4><p>Cómo construir un flujo sostenible donde cada acción alimenta las siguientes. No sprints de energía seguidos de vacío. No es teoría: tiene pasos concretos y resultados que podés medir desde la primera semana.</p></div></div>
+      <div class="module"><div class="module-n">6</div><div><span class="module-tag">Escalabilidad</span><h4>Escalar Sin Perder la Autenticidad</h4><p>Cómo crecer sin convertirte en una máquina de contenido. El equilibrio entre sistema y presencia humana que hace que la gente te compre a vos y no a la competencia.</p></div></div>
+    </div>
+    <div class="includes-summary">
+      <h4>El programa incluye</h4>
+      <ul class="includes-list">
+        <li>6 módulos de contenido aplicable</li>
+        <li>Guías PDF por módulo</li>
+        <li>Plantillas de mensajes y posts</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- BEFORE / AFTER -->
+<section class="section">
+  <div class="container">
+    <p class="section-tag">La transformación</p>
+    <h2>El antes y el después de<br>entender el <span class="gold">Código</span></h2>
+    <div class="ba-grid">
+      <div class="ba-col ba-before">
+        <span class="ba-label">Antes del Código</span>
+        <ul>
+          <li><span class="icon">✕</span>Publicás y nadie responde</li>
+          <li><span class="icon">✕</span>Cada venta parece un milagro</li>
+          <li><span class="icon">✕</span>Sentís que tenés que convencer</li>
+          <li><span class="icon">✕</span>No sabés qué decir ni cuándo</li>
+          <li><span class="icon">✕</span>Bajás precios para cerrar</li>
+          <li><span class="icon">✕</span>Copiás lo que hacen otros</li>
+          <li><span class="icon">✕</span>Dependés del humor del día</li>
+          <li><span class="icon">✕</span>La incertidumbre es constante</li>
+        </ul>
+      </div>
+      <div class="ba-col ba-after">
+        <span class="ba-label">Con el Código Activo</span>
+        <ul>
+          <li><span class="icon">✓</span>Tu comunicación atrae intencionalmente</li>
+          <li><span class="icon">✓</span>Las ventas son el resultado de un sistema</li>
+          <li><span class="icon">✓</span>El cliente llega pre-dispuesto a comprar</li>
+          <li><span class="icon">✓</span>Tenés estructura para cualquier situación</li>
+          <li><span class="icon">✓</span>Tu precio refleja tu valor percibido</li>
+          <li><span class="icon">✓</span>Tu voz diferencia y posiciona</li>
+          <li><span class="icon">✓</span>El sistema trabaja aunque no estés</li>
+          <li><span class="icon">✓</span>Claridad y dirección todos los días</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS — reescritos con micro-detalles -->
+<section class="testimonials-section section">
+  <div class="container">
+    <p class="section-tag">Resultados reales</p>
+    <h2>Personas que aplicaron el<br>Código y <span class="gold">esto pasó</span></h2>
+    <div class="testi-grid">
+
+      <div class="testi-card">
+        <div class="testi-result">4 clientes · 10 días</div>
+        <div class="stars">★★★★★</div>
+        <p class="testi-text">"Llevaba 8 meses con mi emprendimiento vendiendo de forma completamente irregular — un cliente un mes, ninguno el siguiente. En la semana 3 apliqué lo del módulo de posicionamiento y cambié cómo presentaba mi servicio. <strong>Cerré 4 clientes en 10 días sin bajar el precio ni una vez.</strong> La diferencia fue entender cómo me percibían antes de hablar conmigo."</p>
+        <div class="testi-context">8 meses emprendiendo · Ventas irregulares · Nicho: consultoría de imagen</div>
+        <div class="testi-author">
+          <div class="testi-avatar" style="background: var(--gold);">MR</div>
+          <div><div class="testi-name">Martina R.</div><div class="testi-role">Consultora de imagen · Buenos Aires</div></div>
+        </div>
+      </div>
+
+      <div class="testi-card">
+        <div class="testi-result">Más en 2 semanas que en 3 meses</div>
+        <div class="stars">★★★★★</div>
+        <p class="testi-text">"Tenía 2.400 seguidores y casi cero ventas. Pensaba que el problema era el número. Apliqué el módulo 4 y cambié la estructura de mis posts y DMs — no el tono, sino la lógica. <strong>En dos semanas generé más que en los tres meses anteriores juntos.</strong> Nadie me lo había explicado así antes."</p>
+        <div class="testi-context">Audiencia activa, sin conversiones · Nicho: productividad y hábitos</div>
+        <div class="testi-author">
+          <div class="testi-avatar" style="background: #4c8ec9;">DS</div>
+          <div><div class="testi-name">Diego S.</div><div class="testi-role">Coach de productividad · México</div></div>
+        </div>
+      </div>
+
+      <div class="testi-card">
+        <div class="testi-result">Precios +40% · Sin objeciones</div>
+        <div class="stars">★★★★★</div>
+        <p class="testi-text">"Yo misma me desautorizaba al hablar. Usaba palabras que pedían permiso en lugar de comunicar valor. Desde que trabajé el módulo de identidad, <strong>subí mis precios un 40% y mis últimas 3 conversaciones cerraron sin una sola objeción.</strong> Esto me cambió la forma de ver las ventas por completo."</p>
+        <div class="testi-context">Vendía barato por miedo al rechazo · Nicho: diseño freelance</div>
+        <div class="testi-author">
+          <div class="testi-avatar" style="background: #c94c4c;">LV</div>
+          <div><div class="testi-name">Lucía V.</div><div class="testi-role">Diseñadora freelance · Colombia</div></div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- SHAREABILITY PULL QUOTE -->
+    <div class="share-quote">
+      <p>"Siempre escuché que tenía que mostrar más valor, mejorar mi oferta. Nadie me dijo que el problema era la percepción que yo mismo construía antes de abrir la boca."</p>
+      <cite>— Andrés M., emprendedor digital &nbsp;·&nbsp; 6 semanas aplicando el Código</cite>
+    </div>
+
+  </div>
+</section>
+
+<!-- BONUS -->
+<section class="section">
+  <div class="container">
+    <p class="section-tag">Bonus exclusivos</p>
+    <h2>Además del programa principal,<br>recibís esto <span class="gold">sin costo adicional</span></h2>
+    <div class="bonus-grid" style="grid-template-columns: 1fr 1fr;">
+      <div class="bonus-card"><span class="bonus-badge">Bonus 01</span><div class="bonus-value">Valor: $97.000 pesos</div><h4>Kit de Mensajes que Convierten</h4><p>30 plantillas de DMs, respuestas a objeciones y estructuras de oferta probadas. Copiá, adaptá y enviá desde el día 1. No teoría — texto listo para usar.</p></div>
+      <div class="bonus-card"><span class="bonus-badge">Bonus 02</span><div class="bonus-value">Valor: $67.000 pesos</div><h4>Guía de Posicionamiento en 48 hs</h4><p>Un proceso paso a paso para clarificar tu propuesta de valor única y empezar a comunicarla en las próximas 48 horas. Con ejemplos por nicho.</p></div>
+    </div>
+    <div style="margin-top:36px; padding: 32px 40px; border: 1px solid rgba(201,168,76,0.4); background: linear-gradient(135deg, rgba(201,168,76,0.07) 0%, rgba(201,168,76,0.02) 100%); text-align: center; position: relative; overflow: hidden;">
+      <div style="position:absolute; top:0; left:0; right:0; height:2px; background: linear-gradient(90deg, transparent, var(--gold), transparent);"></div>
+      <p style="font-family: 'DM Mono', monospace; font-size: 0.68rem; color: var(--gold); letter-spacing:0.18em; text-transform: uppercase; margin-bottom: 16px;">Todo esto lo llevás por</p>
+      <p style="font-family: 'Playfair Display', serif; font-size: 1rem; color: var(--gray); text-decoration: line-through; margin-bottom: 8px; letter-spacing: 0.04em;">Valor real: $97.000 pesos</p>
+      <p style="font-family: 'Playfair Display', serif; font-size: 3rem; font-weight: 900; color: var(--gold); line-height: 1; margin-bottom: 10px;">$47.000 <span style="font-size: 1.1rem; font-weight: 400; color: var(--light-gray); font-family: 'DM Mono', monospace; letter-spacing: 0.1em;">pesos</span></p>
+      <p style="color: var(--light-gray); font-size: 0.9rem;">Pago único &nbsp;·&nbsp; Sin cuotas &nbsp;·&nbsp; Sin costos ocultos</p>
+    </div>
+  </div>
+</section>
+
+<!-- GUARANTEE -->
+<section class="section" style="padding-top: 0;">
+  <div class="container">
+    <p class="section-tag">Sin riesgo</p>
+    <h2>La garantía que hace<br>esta decisión <span class="gold">obvia</span></h2>
+    <div class="guarantee-box">
+      <div class="guarantee-shield">🛡</div>
+      <div>
+        <h3>Garantía Total de 5 Días</h3>
+        <p>Tenés 5 días corridos desde la compra para revisarlo. Si sentís que no es lo que esperabas, te devolvemos el 100% de tu inversión. Sin preguntas. Sin procesos complicados.<br><br>No te pedimos que te quedes con algo que no te sirve. El riesgo es completamente nuestro.<br><br><strong style="color: var(--white);">Lo único que podés perder es seguir donde estás.</strong></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICE JUSTIFICATION — nueva sección -->
+<section class="section" style="padding-top: 0; padding-bottom: 0;">
+  <div class="container">
+    <div class="price-justify">
+      <span class="pj-tag">Por qué $47.000 — y por qué cambia</span>
+      <h3>El precio real de este programa no es $47.000.<br>Y eso va a cambiar pronto.</h3>
+      <p>El valor del contenido que vas a recibir — los módulos, los bonuses y las plantillas — tiene un precio justo de <strong>$97.000 pesos</strong>. Ese es el precio al que va a quedar una vez que cierre este lanzamiento.</p>
+      <p>Los $47.000 existen por una sola razón: estamos en lanzamiento y necesitamos casos de éxito documentados de personas que apliquen el sistema. A cambio de ese precio, te pedimos que lo uses, que lo apliques, y que compartas tu resultado si funciona.</p>
+      <div class="pj-breakdown">
+        <div class="pj-item">
+          <div class="pj-label">Precio post-lanzamiento</div>
+          <div class="pj-val strike">$97.000 pesos</div>
+        </div>
+        <div class="pj-item">
+          <div class="pj-label">Precio de lanzamiento activo</div>
+          <div class="pj-val green">$47.000 pesos — hoy</div>
+        </div>
+      </div>
+      <p>No sabemos exactamente cuándo cerrará este precio — depende de cuántos cupos queden. Lo que sí es cierto: <strong>una vez que los cupos se agoten, el precio sube y no hay excepciones</strong>. No es presión artificial. Es cómo funciona este lanzamiento.</p>
+    </div>
+  </div>
+</section>
+
+<!-- URGENCY + CTA -->
+<section class="urgency-section section" id="cta">
+  <div class="container" style="text-align:center;">
+    <p class="section-tag">Precio de lanzamiento</p>
+    <h2 style="margin-bottom: 40px;">Esta inversión no va a<br>ser <span class="gold">la misma mañana</span></h2>
+    <div class="countdown-label">Tiempo restante al precio de $47.000</div>
+    <div class="countdown">
+      <div class="count-unit"><span class="count-num" id="hours">--</span><div class="count-label">Horas</div></div>
+      <div class="count-unit"><span class="count-num" id="minutes">--</span><div class="count-label">Minutos</div></div>
+      <div class="count-unit"><span class="count-num" id="seconds">--</span><div class="count-label">Segundos</div></div>
+    </div>
+    <div class="price-block">
+      <div class="price-old">$97.000 pesos</div>
+      <div class="price-new" style="font-size: clamp(3rem, 7vw, 5rem);">$47.000</div>
+      <div class="price-note">pesos argentinos &nbsp;·&nbsp; Pago único &nbsp;·&nbsp; Acceso inmediato</div>
+    </div>
+    <button onclick="openPayModal()" class="btn-primary" style="font-size: 1.08rem; padding: 22px 60px; font-family: 'DM Sans', sans-serif;">Quiero el programa por $47.000 &rarr;</button>
+    <span class="btn-sub" style="margin-top: 16px;">🔒 Pago seguro &nbsp;·&nbsp; Acceso instantáneo &nbsp;·&nbsp; Garantía 5 días corridos</span>
+    <div class="slots-bar">
+      <div class="countdown-label" style="margin-top: 32px;">Cupos disponibles al precio actual</div>
+      <div class="slots-track"><div class="slots-fill"></div></div>
+      <div class="slots-text"><span>73% de cupos tomados</span><span>Solo 27 restantes</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- FINAL CTA -->
+<section class="final-cta">
+  <div class="container">
+    <h2>Hoy podés seguir haciendo<br>lo mismo. O podés activar<br>el <span class="gold italic">Código.</span></h2>
+    <p>No cambia nada si no cambia la estructura. Esta es la estructura.</p>
+    <button onclick="openPayModal()" class="btn-primary" style="font-family: 'DM Sans', sans-serif;">Quiero el programa por $47.000</button>
+    <span class="btn-sub">🔒 Pago seguro &nbsp;·&nbsp; Acceso inmediato &nbsp;·&nbsp; Garantía 5 días corridos</span>
+    <div class="sep"><div class="sep-line"></div><div class="sep-icon">&#10022; &#10022; &#10022;</div><div class="sep-line"></div></div>
+    <div style="margin-top: 52px; display: flex; gap: 40px; justify-content: center; flex-wrap: wrap; color: var(--gray); font-size: 0.82rem; font-family: 'DM Mono', monospace; letter-spacing: 0.06em;">
+      <span>🔐 SSL Seguro</span>
+      <span>⚡ Acceso Instantáneo</span>
+      <span>🔄 Garantía 5 días</span>
+      <span>📱 Funciona en cualquier dispositivo</span>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p>© 2024 Código Venta Invisible. Todos los derechos reservados.</p>
+  <p style="margin-top: 8px;"><a href="#">Términos y Condiciones</a> &nbsp;·&nbsp; <a href="#">Política de Privacidad</a> &nbsp;·&nbsp; <a href="#">Contacto</a></p>
+  <p style="margin-top: 12px; font-size: 0.72rem; max-width: 560px; margin-left: auto; margin-right: auto; line-height: 1.6;">Los resultados presentados son individuales y no garantizan resultados específicos. Los resultados varían según el nivel de implementación y el contexto de cada persona.</p>
+</footer>
+
+
+<!-- MODAL CAPTURA DE DATOS -->
+<div class="modal-overlay" id="payModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+  <div class="modal-box">
+    <button class="modal-close" id="modalClose" aria-label="Cerrar">&#x2715;</button>
+    <div id="modalForm">
+      <span class="modal-tag">Un paso más</span>
+      <h3 id="modalTitle">¿A dónde te enviamos la confirmación?</h3>
+      <p class="modal-sub">Completá tus datos y te redirigimos al pago de forma inmediata.</p>
+      <form id="captureForm">
+        <div class="modal-field">
+          <label for="userName">Tu nombre</label>
+          <input type="text" id="userName" name="nombre" placeholder="Ej: María González" required autocomplete="name">
+        </div>
+        <div class="modal-field">
+          <label for="userEmail">Tu email</label>
+          <input type="email" id="userEmail" name="email" placeholder="Ej: maria@gmail.com" required autocomplete="email">
+        </div>
+        <button type="submit" class="modal-submit" id="modalSubmitBtn">
+          Ir al pago &rarr; $47.000 pesos
+        </button>
+        <div class="modal-error" id="modalError">Hubo un error al enviar. Intentá de nuevo.</div>
+        <p class="modal-note">&#128274; Tus datos están seguros. No enviamos spam.</p>
+      </form>
+    </div>
+    <div class="modal-success" id="modalSuccess">
+      <div class="success-icon">&#10022;</div>
+      <h4>¡Todo listo!</h4>
+      <p>Redirigiendo al pago en un momento...</p>
+    </div>
+  </div>
+</div>
+
+<script>
+// COUNTDOWN
+(function() {
+  var KEY = 'cvi_deadline_v3';
+  var deadline = parseInt(localStorage.getItem(KEY) || '0');
+  if (!deadline || deadline < Date.now()) {
+    deadline = Date.now() + (12 * 3600 * 1000);
+    localStorage.setItem(KEY, deadline);
+  }
+  function tick() {
+    var diff = Math.max(0, deadline - Date.now());
+    var h = Math.floor(diff / 3600000);
+    var m = Math.floor((diff % 3600000) / 60000);
+    var s = Math.floor((diff % 60000) / 1000);
+    document.getElementById('hours').textContent = String(h).padStart(2,'0');
+    document.getElementById('minutes').textContent = String(m).padStart(2,'0');
+    document.getElementById('seconds').textContent = String(s).padStart(2,'0');
+    if (diff > 0) setTimeout(tick, 1000);
+  }
+  tick();
+})();
+
+// SCROLL REVEAL
+var observer = new IntersectionObserver(function(entries) {
+  entries.forEach(function(e) {
+    if (e.isIntersecting) {
+      e.target.style.opacity = '1';
+      e.target.style.transform = 'translateY(0)';
+    }
+  });
+}, { threshold: 0.1 });
+document.querySelectorAll('.module, .benefit-item, .testi-card, .bonus-card, .ba-col, .creator-inner').forEach(function(el) {
+  el.style.opacity = '0';
+  el.style.transform = 'translateY(20px)';
+  el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+  observer.observe(el);
+});
+
+// MODAL — el HTML ya existe arriba, este script corre después
+var FORMSPREE_URL = 'https://formspree.io/f/mwvwvaad';
+var MP_URL = 'https://mpago.li/2nm8EP5';
+
+function openPayModal() {
+  document.getElementById('payModal').classList.add('active');
+  document.body.style.overflow = 'hidden';
+  setTimeout(function() { document.getElementById('userName').focus(); }, 100);
+}
+
+function closePayModal() {
+  document.getElementById('payModal').classList.remove('active');
+  document.body.style.overflow = '';
+}
+
+document.getElementById('modalClose').addEventListener('click', closePayModal);
+
+document.getElementById('payModal').addEventListener('click', function(e) {
+  if (e.target === this) closePayModal();
+});
+
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') closePayModal();
+});
+
+document.getElementById('captureForm').addEventListener('submit', function(e) {
+  e.preventDefault();
+  var nombre = document.getElementById('userName').value.trim();
+  var email  = document.getElementById('userEmail').value.trim();
+
+  // Enviar datos a Formspree en segundo plano
+  try {
+    fetch(FORMSPREE_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify({ nombre: nombre, email: email, _subject: 'Nuevo lead — Código Venta Invisible' })
+    }).catch(function() {});
+  } catch(err) {}
+
+  // Redirigir a Mercado Pago — funciona en local y en servidor
+  var a = document.createElement('a');
+  a.href = MP_URL;
+  a.target = '_blank';
+  a.rel = 'noopener';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+});
+</script>
+</body>
+</html>
